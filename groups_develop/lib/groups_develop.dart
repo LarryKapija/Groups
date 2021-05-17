@@ -2,9 +2,11 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:async';
 
+import 'package:groups_develop/models/groups_model.dart';
+
 import 'models/student_model.dart';
 
-bool isBigger(int a, int b) => a > b;
+bool isBigger(int a, int b) => a >= b;
 
 Future<List<Student>> getStudents(String fileloc) async {
   final File file = File(fileloc);
@@ -40,4 +42,38 @@ Future<List<String>> getThemes(String fileloc) async {
   }
 
   return themes;
+}
+
+List<Group> getGroups(
+    int quantity, List<Student> students, List<String> themes) {
+  List<Group> groups = [];
+  if (isBigger(students.length, quantity) &&
+      isBigger(themes.length, quantity)) {
+    double studentsPerGroup = students.length / quantity;
+    double themesPerGroup = themes.length / quantity;
+    for (int i = 0; i < quantity; i++) {
+      List<Student> studentGroup = [];
+
+      for (int j = 0; j < studentsPerGroup; j++) {
+        if (students.isNotEmpty) {
+          Student newStudent = students.removeAt(0);
+
+          studentGroup.add(newStudent);
+        }
+      }
+
+      List<String> themesGroup = [];
+      for (int j = 0; j < themesPerGroup; j++) {
+        if (themes.isNotEmpty) {
+          String newTheme = themes.removeAt(0);
+          themesGroup.add(newTheme);
+        }
+      }
+
+      Group group = Group((i + 1).toString(), studentGroup, themesGroup);
+      groups.add(group);
+    }
+  }
+  groups.shuffle();
+  return groups;
 }
