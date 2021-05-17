@@ -51,6 +51,9 @@ List<Group> getGroups(
       isBigger(themes.length, quantity)) {
     double studentsPerGroup = students.length / quantity;
     double themesPerGroup = themes.length / quantity;
+    double themesRes = themesPerGroup % 1;
+    themesPerGroup = themesRes > 0.5 ? themesPerGroup : themesRes;
+    var list = List<int>.generate(quantity, (i) => i + 1);
     for (int i = 0; i < quantity; i++) {
       List<Student> studentGroup = [];
 
@@ -68,9 +71,15 @@ List<Group> getGroups(
           String newTheme = themes.removeAt(0);
           themesGroup.add(newTheme);
         }
+        if (themesRes > 0 && themesRes < 0.5) {
+          themesRes = 0;
+          String newTheme = themes.removeAt(0);
+          themesGroup.add(newTheme);
+        }
       }
-
-      Group group = Group((i + 1).toString(), studentGroup, themesGroup);
+      list.shuffle();
+      Group group =
+          Group(list.removeAt(0).toString(), studentGroup, themesGroup);
       groups.add(group);
     }
   }
