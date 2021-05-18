@@ -85,6 +85,8 @@ List<Group> generateGroups(int groupQuantity, List<Student> originalStudents,
         }
       }
     }
+  } else {
+    throw RangeError('Cantidad de grupos demasiado alta');
   }
 
   groups.sort((a, b) => int.parse(a.id) - int.parse(b.id));

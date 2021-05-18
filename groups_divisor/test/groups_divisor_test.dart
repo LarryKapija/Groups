@@ -1,14 +1,13 @@
 import 'package:groups_divisor/groups_divisor.dart' as lib;
-import 'package:groups_divisor/models/groups_models.dart';
-import 'package:groups_divisor/models/student_model.dart';
 import 'package:test/test.dart';
 
 void main() {
   test('Aleatoriedad', () async {
+    var cycles = 2000;
     var theoricProb = 2 / 3;
     var studentsGroups = <List<int>>[[], [], []];
 
-    for (var i = 0; i < 2000; i++) {
+    for (var i = 0; i < cycles; i++) {
       var students = await lib.getStudents('./lib/documents/students-20.csv');
       var topics = await lib.getTopics('./lib/documents/topics-5.csv');
       var groups = lib.generateGroups(3, students, topics);
@@ -24,7 +23,7 @@ void main() {
           isSeven++;
         }
       }
-      factualProb.add(isSeven / 2000);
+      factualProb.add(isSeven / cycles);
     }
 
     var isAccurate = true;
@@ -37,5 +36,19 @@ void main() {
     }
 
     expect(isAccurate, true);
+  });
+
+  test('Excepciones', () async {
+    var students = await lib.getStudents('./lib/documents/students-20.csv');
+    var topics = await lib.getTopics('./lib/documents/topics-5.csv');
+    expect(
+        () => lib.generateGroups(30, students, topics),
+        throwsA(
+          predicate(
+            (e) =>
+                e is RangeError &&
+                e.message == 'Cantidad de grupos demasiado alta',
+          ),
+        ));
   });
 }

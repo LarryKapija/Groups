@@ -13,9 +13,12 @@ void main(List<String> args) async {
 
   students.shuffle();
   topics.shuffle();
-
-  List<Group> groups = lib.generateGroups(groupQuantity, students, topics);
-  printGroups(groups);
+  try {
+    List<Group> groups = lib.generateGroups(groupQuantity, students, topics);
+    printGroups(groups);
+  } catch (e) {
+    e is RangeError ? print(e.message) : print('');
+  }
 }
 
 void printGroups(List<Group> groups) {
