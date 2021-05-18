@@ -8,7 +8,7 @@ void main() {
     var theoricProb = 2 / 3;
     var studentsGroups = <List<int>>[[], [], []];
 
-    for (var i = 0; i < 1000; i++) {
+    for (var i = 0; i < 2000; i++) {
       var students = await lib.getStudents('./lib/documents/students-20.csv');
       var topics = await lib.getTopics('./lib/documents/topics-5.csv');
       var groups = lib.generateGroups(3, students, topics);
@@ -24,7 +24,7 @@ void main() {
           isSeven++;
         }
       }
-      factualProb.add(isSeven / 1000);
+      factualProb.add(isSeven / 2000);
     }
 
     var isAccurate = true;
