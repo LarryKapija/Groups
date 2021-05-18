@@ -29,36 +29,36 @@ Future<List<Student>> getStudents(String fileloc) async {
   return students;
 }
 
-Future<List<String>> getThemes(String fileloc) async {
+Future<List<String>> getTopics(String fileloc) async {
   final File file = File(fileloc);
-  List<String> themes = [];
+  List<String> topics = [];
   Stream<String> sLines =
       file.openRead().transform(utf8.decoder).transform(LineSplitter());
   int counter = 0;
   await for (var line in sLines) {
     counter++;
     if (counter == 1) continue;
-    themes.add(line);
+    topics.add(line);
   }
 
-  return themes;
+  return topics;
 }
 
-List<Group> getGroups(
-    int quantity, List<Student> Originalstudents, List<String> Originalthemes) {
+List<Group> generateGroups(
+    int quantity, List<Student> Originalstudents, List<String> Originaltopics) {
   List<Group> groups = [];
   List<Student> students = List.from(Originalstudents);
-  List<String> themes = List.from(Originalthemes);
+  List<String> topics = List.from(Originaltopics);
   if (isBigger(students.length, quantity) &&
-      isBigger(themes.length, quantity)) {
+      isBigger(topics.length, quantity)) {
     double studentsPerGroup = students.length / quantity;
-    double themesPerGroup = themes.length / quantity;
-    double themesRes = themesPerGroup % 1;
+    double topicsPerGroup = topics.length / quantity;
+    double topicsRes = topicsPerGroup % 1;
     double studentRes = studentsPerGroup % 1;
     studentsPerGroup =
         studentRes > 0.5 || studentRes == 0 ? studentsPerGroup : studentRes;
-    themesPerGroup =
-        themesRes > 0.5 || themesRes == 0 ? themesPerGroup : themesRes;
+    topicsPerGroup =
+        topicsRes > 0.5 || topicsRes == 0 ? topicsPerGroup : topicsRes;
 
     var list = List<int>.generate(quantity, (i) => i + 1);
     for (int i = 0; i < quantity; i++) {
@@ -70,28 +70,28 @@ List<Group> getGroups(
 
           studentGroup.add(newStudent);
         }
-        if (themesRes > 0 && themesRes < 0.5) {
+        if (topicsRes > 0 && topicsRes < 0.5) {
           studentRes = 0;
           Student newStudent = students.removeAt(0);
           studentGroup.add(newStudent);
         }
       }
 
-      List<String> themesGroup = [];
-      for (int j = 0; j < themesPerGroup; j++) {
-        if (themes.isNotEmpty) {
-          String newTheme = themes.removeAt(0);
-          themesGroup.add(newTheme);
+      List<String> topicsGroup = [];
+      for (int j = 0; j < topicsPerGroup; j++) {
+        if (topics.isNotEmpty) {
+          String newTheme = topics.removeAt(0);
+          topicsGroup.add(newTheme);
         }
-        if (themesRes > 0 && themesRes < 0.5) {
-          themesRes = 0;
-          String newTheme = themes.removeAt(0);
-          themesGroup.add(newTheme);
+        if (topicsRes > 0 && topicsRes < 0.5) {
+          topicsRes = 0;
+          String newTheme = topics.removeAt(0);
+          topicsGroup.add(newTheme);
         }
       }
       list.shuffle();
       Group group =
-          Group(list.removeAt(0).toString(), studentGroup, themesGroup);
+          Group(list.removeAt(0).toString(), studentGroup, topicsGroup);
       groups.add(group);
     }
   }

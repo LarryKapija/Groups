@@ -17,10 +17,10 @@ void main(List<String> args) async {
   var topicsFile = args[2];
 
   List<Student> students = await lib.getStudents(studentsFile);
-  List<String> themes = await lib.getThemes(topicsFile);
+  List<String> topics = await lib.getTopics(topicsFile);
 
   students.shuffle();
-  themes.shuffle();
+  topics.shuffle();
 
   // students.forEach((element) {
   //   print(element);
@@ -30,11 +30,15 @@ void main(List<String> args) async {
   //   print(element);
   // });
 
-  List<Group> groups = lib.getGroups(groupQuantity, students, themes);
+  List<Group> groups = lib.generateGroups(groupQuantity, students, topics);
 
+  printGroups(groups);
+}
+
+void printGroups(List<Group> groups) {
   groups.forEach((element) {
     print(element);
-    print('  Temas: ' + element.themes.toString());
+    print('  Temas: ' + element.topics.toString());
     element.students.forEach((student) {
       print('  ' + student.toString());
     });

@@ -16,8 +16,8 @@ void main() {
     for (int i = 0; i < 750; i++) {
       List<Student> students =
           await lib.getStudents('./lib/documents/students-20.csv');
-      List<String> themes = await lib.getThemes('./lib/documents/topics-5.csv');
-      List<Group> groups = lib.getGroups(3, students, themes);
+      List<String> themes = await lib.getTopics('./lib/documents/topics-5.csv');
+      List<Group> groups = lib.generateGroups(3, students, themes);
       for (int j = 0; j < 3; j++) {
         studentsGroups[j].add(groups[j].students.length);
       }
