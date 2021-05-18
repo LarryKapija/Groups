@@ -53,48 +53,32 @@ List<Group> generateGroups(
       isBigger(topics.length, quantity)) {
     double studentsPerGroup = students.length / quantity;
     double topicsPerGroup = topics.length / quantity;
-    double topicsRes = topicsPerGroup % 1;
-    double studentRes = studentsPerGroup % 1;
-    studentsPerGroup =
-        studentRes > 0.5 || studentRes == 0 ? studentsPerGroup : studentRes;
-    topicsPerGroup =
-        topicsRes > 0.5 || topicsRes == 0 ? topicsPerGroup : topicsRes;
-
     var list = List<int>.generate(quantity, (i) => i + 1);
+    list.shuffle();
     for (int i = 0; i < quantity; i++) {
-      List<Student> studentGroup = [];
-
-      for (int j = 0; j < studentsPerGroup; j++) {
-        if (students.isNotEmpty) {
-          Student newStudent = students.removeAt(0);
-
-          studentGroup.add(newStudent);
-        }
-        if (topicsRes > 0 && topicsRes < 0.5) {
-          studentRes = 0;
-          Student newStudent = students.removeAt(0);
-          studentGroup.add(newStudent);
-        }
-      }
-
       List<String> topicsGroup = [];
-      for (int j = 0; j < topicsPerGroup; j++) {
-        if (topics.isNotEmpty) {
-          String newTheme = topics.removeAt(0);
-          topicsGroup.add(newTheme);
-        }
-        if (topicsRes > 0 && topicsRes < 0.5) {
-          topicsRes = 0;
-          String newTheme = topics.removeAt(0);
-          topicsGroup.add(newTheme);
-        }
-      }
-      list.shuffle();
+      List<Student> studentGroup = [];
       Group group =
           Group(list.removeAt(0).toString(), studentGroup, topicsGroup);
       groups.add(group);
     }
+    for (int i = 0; i < studentsPerGroup; i++) {
+      for (int j = 0; j < quantity; j++) {
+        if (students.isNotEmpty) {
+          Student newStudent = students.removeAt(0);
+          groups[j].students.add(newStudent);
+        }
+      }
+    }
+    for (int i = 0; i < topicsPerGroup; i++) {
+      for (int j = 0; j < quantity; j++) {
+        if (topics.isNotEmpty) {
+          String newTopic = topics.removeAt(0);
+          groups[j].topics.add(newTopic);
+        }
+      }
+    }
   }
-  groups.sort((a, b) => a.id.compareTo(b.id));
+  groups.sort((a, b) => int.parse(a.id) - int.parse(b.id));
   return groups;
 }
