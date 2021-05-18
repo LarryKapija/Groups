@@ -5,8 +5,9 @@ import 'package:test/test.dart';
 import 'package:groups_develop/groups_develop.dart' as lib;
 
 void main() {
-  test('grupos más que estudiantes', () {
-    expect(isBigger(6, 5), true);
+  test('grupos más que estudiantes', () async {
+    List<Student> students =
+        await lib.getStudents('./lib/documents/students-20.csv');
   });
 
   test('Aleatoriedad estudiantes', () async {
