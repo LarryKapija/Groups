@@ -45,14 +45,21 @@ Future<List<String>> getThemes(String fileloc) async {
 }
 
 List<Group> getGroups(
-    int quantity, List<Student> students, List<String> themes) {
+    int quantity, List<Student> Originalstudents, List<String> Originalthemes) {
   List<Group> groups = [];
+  List<Student> students = List.from(Originalstudents);
+  List<String> themes = List.from(Originalthemes);
   if (isBigger(students.length, quantity) &&
       isBigger(themes.length, quantity)) {
     double studentsPerGroup = students.length / quantity;
     double themesPerGroup = themes.length / quantity;
     double themesRes = themesPerGroup % 1;
-    themesPerGroup = themesRes > 0.5 ? themesPerGroup : themesRes;
+    double studentRes = studentsPerGroup % 1;
+    studentsPerGroup =
+        studentRes > 0.5 || studentRes == 0 ? studentsPerGroup : studentRes;
+    themesPerGroup =
+        themesRes > 0.5 || themesRes == 0 ? themesPerGroup : themesRes;
+
     var list = List<int>.generate(quantity, (i) => i + 1);
     for (int i = 0; i < quantity; i++) {
       List<Student> studentGroup = [];
@@ -61,6 +68,11 @@ List<Group> getGroups(
         if (students.isNotEmpty) {
           Student newStudent = students.removeAt(0);
 
+          studentGroup.add(newStudent);
+        }
+        if (themesRes > 0 && themesRes < 0.5) {
+          studentRes = 0;
+          Student newStudent = students.removeAt(0);
           studentGroup.add(newStudent);
         }
       }
@@ -83,6 +95,6 @@ List<Group> getGroups(
       groups.add(group);
     }
   }
-  groups.shuffle();
+  groups.sort((a, b) => a.id.compareTo(b.id));
   return groups;
 }
